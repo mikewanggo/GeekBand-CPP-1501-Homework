@@ -11,6 +11,8 @@ class Shape {
       }
       return no_ == other.no_;
   }
+  
+  virtual ~Shape() {}
 
  private:
   int no_;

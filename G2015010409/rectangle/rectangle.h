@@ -10,13 +10,14 @@ class Rectangle : public Shape {
 friend std::ostream& operator<<(std::ostream& os, const Rectangle& r);
  public:
   Rectangle(int width, int height, int x, int y)
-      : width_(width), height_(height) {
-    left_up_ = new Point(x, y);
-  }
+      : width_(width), height_(height), left_up_(new Point(x, y)) { }
 
   Rectangle(const Rectangle& other) : Shape(other), width_(other.width_), height_(other.height_) {
-      assert(other.left_up_);
-      left_up_ = new Point(*other.left_up_);
+	  if (other.left_up_ != nullptr) {
+		  this->left_up_ = new Point(*other.left_up_);
+	  } else {
+		  this->left_up_ = nullptr;
+	  }
   }
 
   Rectangle& operator=(const Rectangle& other) {
@@ -26,9 +27,16 @@ friend std::ostream& operator<<(std::ostream& os, const Rectangle& r);
       Shape::operator=(other);
       width_ = other.width_;
       height_ = other.height_;
-      assert(left_up_);
-      assert(other.left_up_);
-      *left_up_ = *other.left_up_;
+	  if (other.left_up_ != nullptr) {
+		  if (this->left_up_ != nullptr) {
+			  *this->left_up_ = *other.left_up_;
+		  } else {
+			  this->left_up_ = new Point(*other.left_up_);
+		  }
+	  } else {
+		  delete this->left_up_;
+		  this->left_up_ = nullptr;
+	  }
       return *this;
   }
 
